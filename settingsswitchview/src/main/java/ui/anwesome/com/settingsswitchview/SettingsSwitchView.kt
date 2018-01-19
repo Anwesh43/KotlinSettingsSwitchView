@@ -20,29 +20,49 @@ class SettingsSwitchView(ctx:Context):View(ctx) {
         return true
     }
     data class SettingsSwitch(var x:Float,var y:Float,var size:Float) {
+        val state = SettingsSwitchState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
             canvas.save()
-            canvas.rotate(90f)
+            canvas.rotate(90f*state.scale)
+            paint.color = Color.parseColor("#757575")
+            val path = Path()
+            path.moveTo(size/4,0f)
+            for(i in 0..6) {
+                val deg = i*60
+                val deg1 = deg + 15
+                val deg2 = deg + 45
+                val deg3 = deg + 60
+                val x1 = (size/2)*Math.cos(deg1*Math.PI/180).toFloat()
+                val y1 = (size/2)*Math.cos(deg1*Math.PI/180).toFloat()
+                val x2 = (size/2)*Math.cos(deg2*Math.PI/180).toFloat()
+                val y2 = (size/2)*Math.cos(deg2*Math.PI/180).toFloat()
+                val x3 = (size/4)*Math.cos(deg3*Math.PI/180).toFloat()
+                val y3 = (size/4)*Math.cos(deg3*Math.PI/180).toFloat()
+                path.lineTo(x1,y1)
+                path.lineTo(x2,y2)
+                path.lineTo(x3,y3)
+            }
+            canvas.drawPath(path,paint)
             canvas.restore()
             canvas.save()
             canvas.translate(-size/6,0f)
             canvas.save()
             paint.color = Color.parseColor("#EEEEEE")
             canvas.drawRoundRect(RectF(0f,-size/10,size/3,size/10),size/10,size/10,paint)
-            canvas.drawCircle(-size/10+size/7+size/3,0f,size/7,paint)
+            canvas.drawCircle(-size/10+size/7+size/3*state.scale,0f,size/7,paint)
             paint.color = Color.parseColor("#01579B")
-            canvas.drawRoundRect(RectF(0f,-size/10,size/3,size/10),size/10,size/10,paint)
+            canvas.drawRoundRect(RectF(0f,-size/10,size/3*state.scale,size/10),size/10,size/10,paint)
             canvas.restore()
             canvas.restore()
             canvas.restore()
         }
         fun update(stopcb:(Float)->Unit) {
-
+            state.update(stopcb)
         }
         fun startUpdating(startcb:()->Unit) {
-
+            state.startUpdating(startcb)
         }
     }
     data class SettingsSwitchState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
