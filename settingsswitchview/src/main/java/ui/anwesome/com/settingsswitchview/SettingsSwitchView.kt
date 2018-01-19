@@ -3,6 +3,7 @@ package ui.anwesome.com.settingsswitchview
 /**
  * Created by anweshmishra on 19/01/18.
  */
+import android.app.Activity
 import android.graphics.*
 import android.view.*
 import android.content.*
@@ -129,6 +130,13 @@ class SettingsSwitchView(ctx:Context):View(ctx) {
             settingSwitch?.startUpdating {
                 animator.start()
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity):SettingsSwitchView {
+            val view = SettingsSwitchView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
