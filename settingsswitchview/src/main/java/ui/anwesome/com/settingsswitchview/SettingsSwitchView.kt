@@ -107,4 +107,28 @@ class SettingsSwitchView(ctx:Context):View(ctx) {
             }
         }
     }
+    data class Renderer(var view:SettingsSwitchView,var time:Int = 0) {
+        val animator = Animator(view)
+        var settingSwitch:SettingsSwitch?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                settingSwitch = SettingsSwitch(w/2,h/2,Math.min(w,h)/2)
+            }
+            canvas.drawColor(Color.parseColor("#212121"))
+            settingSwitch?.draw(canvas,paint)
+            time++
+            animator.animate {
+                settingSwitch?.update {
+                    animator.stop()
+                }
+            }
+        }
+        fun handleTap() {
+            settingSwitch?.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
